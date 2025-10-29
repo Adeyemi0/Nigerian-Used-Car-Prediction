@@ -1,8 +1,10 @@
 # Used Car Price Prediction for Nigerian Market
 
-A machine learning web application that predicts used car prices in Nigeria using semantic embeddings and LightGBM regression. The model was trained on scraped car listings (9,835) from Autochek Nigeria.
+A machine learning web application that predicts used car prices in Nigeria using semantic embeddings and LightGBM regression. The model was trained on 9,835 scraped car listings from Autochek Nigeria and achieves 83% accuracy (R² score).
 
 **Live Demo:** [https://huggingface.co/spaces/adeyemi001/Cars](https://huggingface.co/spaces/adeyemi001/Cars)
+
+![Application Demo](car.gif)
 
 ## Table of Contents
 
@@ -56,12 +58,14 @@ This tool helps buyers and sellers make informed decisions by providing accurate
 The final model uses 12 carefully selected features:
 
 **Semantic Features (10):**
-- 10 embedding dimensions from car name encoding (e.g., `name_emb_307`, `name_emb_741`)
+- 10 embedding dimensions from car name encoding (capturing brand, model, and year semantics)
+  - `name_emb_307`, `name_emb_741`, `name_emb_559`, `name_emb_618`
+  - `name_emb_207`, `name_emb_661`, `name_emb_766`, `name_emb_541`, `name_emb_518`
 
-**Categorical Features (2):**
+**Categorical Features (3):**
 - `origin_local`: Whether the car is locally sourced
-- `interior_color_coffee brown`: Specific interior color indicator
-- `exterior_color_dark silver`: Specific exterior color indicator
+- `interior_color_coffee brown`: Coffee brown interior indicator
+- `exterior_color_dark silver`: Dark silver exterior indicator
 
 Note: During feature engineering, mileage and engine type were removed as they showed minimal influence on price predictions.
 
@@ -109,13 +113,40 @@ Trained a LightGBM regression model optimized for the Nigerian used car market.
 
 ## Model Performance
 
-| Metric | Value |
-|--------|-------|
-| RMSE | [Insert your value] |
-| MAPE | [Insert your value]% |
-| R² Score | [Insert your value] |
+| Metric | Value | Interpretation |
+|--------|-------|----------------|
+| RMSE | ₦3,481,221.84 | Average prediction error |
+| MAPE | 15.56% | Mean absolute percentage error |
+| R² Score | 0.8304 | Model explains 83% of price variance |
 
-The model demonstrates strong predictive performance with minimal mean absolute percentage error, making it suitable for real-world price estimation.
+The model demonstrates strong predictive performance with a MAPE of 15.56%, meaning predictions are typically within ±16% of actual prices. Given the average car price of ₦18.1 million in the dataset, the RMSE of ₦3.48 million represents a reasonable error margin for the Nigerian used car market.
+
+### Dataset Statistics
+
+| Statistic | Price (₦) |
+|-----------|-----------|
+| Mean | 18,140,400 |
+| Median | 16,500,000 |
+| Std Dev | 8,460,545 |
+| Min | 2,315,000 |
+| Max | 40,000,000 |
+| Sample Size | 8,022 cars |
+
+### Model Diagnostics
+
+**Residual Analysis:**
+
+The model's residuals show healthy patterns indicating good predictive performance:
+
+1. **Residuals vs Predicted Values:** Points are randomly scattered around zero with no clear patterns, indicating homoscedasticity (constant variance) and appropriate model specification.
+
+2. **Distribution of Residuals:** The residuals follow an approximately normal distribution centered at zero, validating the assumptions of linear regression-based models.
+
+3. **Q-Q Plot:** Residuals closely follow the theoretical normal distribution line, with slight deviations in the tails indicating a few outliers but overall good model fit.
+
+![Residuals vs Predicted Values](residuals_vs_predicted.png)
+![Distribution of Residuals](residuals_distribution.png)
+![Q-Q Plot of Residuals](qq_plot_residuals.png)
 
 ## Technology Stack
 
@@ -253,5 +284,6 @@ The application is deployed on Hugging Face Spaces using Docker for consistent e
 This project is licensed under the MIT License - see the LICENSE file for details.
 
 ---
+
 
 **Note:** This project is for educational and research purposes. Always consult with automotive experts and conduct thorough inspections before purchasing a vehicle.
